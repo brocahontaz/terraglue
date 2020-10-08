@@ -2,12 +2,12 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 export default class Parser {
-  constructor (tfStatePath) {
-    _validateArg(tfStatePath)
-    const splitPath = tfStatePath.split('/').filter(el => el !== '')
+  constructor (tfstatePath) {
+    _validateArg(tfstatePath)
+    const splitPath = tfstatePath.split('/').filter(el => el !== '')
     splitPath[0] = '/' + splitPath[0]
-    this.tfStatePath = path.join.apply(null, splitPath)
-    this.tfStateFile = fs.readFileSync(this.tfStatePath).toString()
+    this.tfstatePath = path.join.apply(null, splitPath)
+    this.tfStateFile = fs.readFileSync(this.tfstatePath).toString()
     this.tfState = JSON.parse(this.tfStateFile)
     this.allInstances = _getInstances(this.tfState)
     this.AllFloatingIPAssociations = _getFloatingIPAssociations(this.tfState)

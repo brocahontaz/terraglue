@@ -1,5 +1,5 @@
 {
-  "path": "/home/brocahontaz/repos/acme-infrastructure/terraform/terraform.tfstate",
+  "tfstatePath": "/home/brocahontaz/repos/acme-infrastructure/terraform/terraform.tfstate",
   "nodeTypes": [
     {
       "name": "k8s_master",
@@ -9,5 +9,41 @@
       "name": "k8s_node",
       "isMaster": false
     }
-  ] 
+  ],
+  "ssh": {
+    "configPath": ""
+  },
+  "ansible": {
+    "hostsPath": ""
+  },
+  "rke": {
+    "configPath": "",
+    "config": {
+      "nodes": [],
+      "services": {
+        "etcd": {
+          "snapshot": "true",
+          "creation": "6h",
+          "retention": "24h"
+        },
+        "kubelet": {
+          "extra_args": {
+            "cloud-provider": "external"
+          }
+        }
+      },
+      "network": {
+        "plugin": "canal"
+      },
+      "authentication": {
+        "strateg": "x509"
+      },
+      "authorization": {
+        "mode": "rbac"
+      },
+      "ingress": {
+        "provider": "none"
+      }
+    }
+  }
 }
