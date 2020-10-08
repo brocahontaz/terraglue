@@ -9,9 +9,10 @@ const config = require('./config.json')
 
 try {
   const parser = new Parser(_getPath(config.tfstatePath))
-  console.log(parser.getNodeInfo(config.nodeTypes))
+  // console.log(parser.getNodeInfo(config.nodeTypes))
   const creator = new Creator(parser.getNodeInfo(config.nodeTypes))
   creator.createAnsibleHosts(_getPath(config.ansible.hostsPath))
+  creator.createSSHConfig(_getPath(config.ssh.configPath), config.ssh.user)
 } catch (err) {
   console.log(err)
 }

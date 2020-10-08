@@ -11,7 +11,8 @@
     }
   ],
   "ssh": {
-    "configPath": ""
+    "configPath": "/home/brocahontaz/repos/acme-infrastructure/configs/ssh_config",
+    "user": "debian"
   },
   "ansible": {
     "hostsPath": "/home/brocahontaz/repos/acme-infrastructure/ansible/hosts"

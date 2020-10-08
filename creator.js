@@ -23,14 +23,14 @@ docker_version="5:19.03.*"
     fs.writeFileSync(hostsPath, hostsFile)
   }
 
-  createSSHConfig (configPath) {
-    let sshConfigFile
+  createSSHConfig (configPath, user) {
+    let sshConfigFile = ''
     this.hosts.forEach(host => {
       sshConfigFile += `Host ${host.name}
-      HostName ${host.ip}
-      User debian
-    
-    `
+HostName ${host.ip}
+User ${user}
+
+`
     })
 
     fs.writeFileSync(configPath, sshConfigFile)
