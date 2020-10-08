@@ -28,7 +28,6 @@ export default class Creator {
       const rkeNode = _createRKENode(host)
       this.rke.config.nodes.push(rkeNode)
     })
-    console.log(this.rke)
     fs.writeFileSync(this.rke.configPath, yaml.safeDump(this.rke.config))
   }
 
@@ -39,8 +38,6 @@ export default class Creator {
    * @memberof Creator
    */
   createAnsibleHosts () {
-    console.log(this.ansible)
-
     let hostsFile = ''
     this.hosts.forEach(host => {
       hostsFile += host.name + '\n'

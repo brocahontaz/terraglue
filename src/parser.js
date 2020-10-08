@@ -11,10 +11,10 @@ export default class Parser {
   constructor (tfstatePath) {
     _validateArg(tfstatePath)
     this.tfstatePath = tfstatePath
-    this.tfStateFile = fs.readFileSync(this.tfstatePath).toString()
-    this.tfState = JSON.parse(this.tfStateFile)
-    this.allInstances = _getInstances(this.tfState)
-    this.AllFloatingIPAssociations = _getFloatingIPAssociations(this.tfState)
+    this.tfstateFile = fs.readFileSync(this.tfstatePath).toString()
+    this.tfstate = JSON.parse(this.tfstateFile)
+    this.allInstances = _getInstances(this.tfstate)
+    this.AllFloatingIPAssociations = _getFloatingIPAssociations(this.tfstate)
   }
 
   /**
@@ -92,7 +92,10 @@ export default class Parser {
 }
 
 /**
- * @param arg
+ * Just validating input arg.
+ *
+ * @author Johan Andersson
+ * @param {string} arg the arg.
  */
 function _validateArg (arg) {
   if (!arg || typeof arg !== 'string' || arg === '') {
@@ -101,30 +104,46 @@ function _validateArg (arg) {
 }
 
 /**
- * @param tfState
+ * Helper method to get all instances.
+ *
+ * @author Johan Andersson
+ * @param {object} tfstate the tfstate file.
+ * @returns {Array} the instances.
  */
-function _getInstances (tfState) {
-  return tfState.resources.filter(element => element.type === 'openstack_compute_instance_v2')
+function _getInstances (tfstate) {
+  return tfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
 }
 
 /**
- * @param instances
- * @param name
+ * Helper method to get instances by name.
+ *
+ * @author Johan Andersson
+ * @param {Array} instances the instances to filter from.
+ * @param {string} name the name.
+ * @returns {Array} the named instances.
  */
 function _getNamedInstances (instances, name) {
   return instances.filter(instance => instance.name === name)[0].instances
 }
 
 /**
- * @param tfState
+ * Helper method to get floating ip assocations.
+ *
+ * @author Johan Andersson
+ * @param {object} tfstate the tfstate file.
+ * @returns {Array} the associations.
  */
-function _getFloatingIPAssociations (tfState) {
-  return tfState.resources.filter(element => element.type === 'openstack_compute_floatingip_associate_v2')
+function _getFloatingIPAssociations (tfstate) {
+  return tfstate.resources.filter(element => element.type === 'openstack_compute_floatingip_associate_v2')
 }
 
 /**
- * @param floatingIPAssociations
- * @param name
+ * Helper method to get the floating ip association by instance name.
+ *
+ * @author Johan Andersson
+ * @param {Array} floatingIPAssociations the associations.
+ * @param {string} name the instance name.
+ * @returns {Array} the named associations.
  */
 function _getNamedIPs (floatingIPAssociations, name) {
   return floatingIPAssociations.filter(instance => instance.name === name)[0].instances
