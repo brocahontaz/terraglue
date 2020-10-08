@@ -26,7 +26,42 @@ export default class Parser {
   }
 
   getIPByInstanceName (name) {
-    _getNamedIPs(this.AllFloatingIPAssociations, name)
+    return _getNamedIPs(this.AllFloatingIPAssociations, name)
+  }
+
+  getNodeAndIPInfoByName (name) {
+    const parsedHosts = []
+    const instances = this.getNamedInstances(name)
+    const instanceIPs = this.getIPByInstanceName(name)
+    instances.forEach(instance => {
+      const ip = instanceIPs.filter(ip => ip.attributes.instance_id === instance.attributes.id)[0].attributes.floating_ip
+      parsedHosts.push({
+        name: instance.attributes.name,
+        ip: ip,
+        internal_address: instance.attributes.access_ip_v4
+      })
+    })
+
+    console.log(parsedHosts)
+    return parsedHosts
+  }
+
+  getNodeInfo (node) {
+    const parsedHosts = []
+    const instances = this.getNamedInstances(node.name)
+    const instanceIPs = this.getIPByInstanceName(node.name)
+    instances.forEach(instance => {
+      const ip = instanceIPs.filter(ip => ip.attributes.instance_id === instance.attributes.id)[0].attributes.floating_ip
+      parsedHosts.push({
+        name: instance.attributes.name,
+        ip: ip,
+        isMaster: node.isMaster,
+        internalAddress: instance.attributes.access_ip_v4
+      })
+    })
+
+    console.log(parsedHosts)
+    return parsedHosts
   }
 }
 
