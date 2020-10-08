@@ -3,6 +3,12 @@ import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 const yaml = require('js-yaml')
 
+/**
+ * Creator module, creates configs and writes to files.
+ *
+ * @author Johan Andersson
+ * @class Creator
+ */
 export default class Creator {
   constructor (hosts, ssh, ansible, rke) {
     this.hosts = hosts
@@ -11,6 +17,12 @@ export default class Creator {
     this.rke = rke
   }
 
+  /**
+   * Create rke cluster.yaml file.
+   *
+   * @author Johan Andersson
+   * @memberof Creator
+   */
   createRKEClusterYaml () {
     this.hosts.forEach(host => {
       const rkeNode = _createRKENode(host)
@@ -20,6 +32,12 @@ export default class Creator {
     fs.writeFileSync(this.rke.configPath, yaml.safeDump(this.rke.config))
   }
 
+  /**
+   * Create ansible inventory/hosts file.
+   *
+   * @author Johan Andersson
+   * @memberof Creator
+   */
   createAnsibleHosts () {
     console.log(this.ansible)
 
@@ -36,6 +54,12 @@ docker_version="5:19.03.*"
     fs.writeFileSync(this.ansible.hostsPath, hostsFile)
   }
 
+  /**
+   * Create SSH config file.
+   *
+   * @author Johan Andersson
+   * @memberof Creator
+   */
   createSSHConfig () {
     let sshConfigFile = ''
     this.hosts.forEach(host => {
@@ -51,7 +75,11 @@ User ${host.user}
 }
 
 /**
- * @param host
+ * Helper function to create rke node.
+ *
+ * @author Johan Andersson
+ * @param {object} host the host.
+ * @returns {object} the rke node.
  */
 function _createRKENode (host) {
   const rkeNode = {

@@ -1,37 +1,76 @@
 // import * as path from 'path'
 import * as fs from 'fs'
 
+/**
+ * Parser module, parses tfstate file.
+ *
+ * @author Johan Andersson
+ * @class Parser
+ */
 export default class Parser {
   constructor (tfstatePath) {
     _validateArg(tfstatePath)
     this.tfstatePath = tfstatePath
-    /*
-    const splitPath = tfstatePath.split('/').filter(el => el !== '')
-    splitPath[0] = '/' + splitPath[0]
-    this.tfstatePath = path.join.apply(null, splitPath)
-    */
     this.tfStateFile = fs.readFileSync(this.tfstatePath).toString()
     this.tfState = JSON.parse(this.tfStateFile)
     this.allInstances = _getInstances(this.tfState)
     this.AllFloatingIPAssociations = _getFloatingIPAssociations(this.tfState)
   }
 
+  /**
+   * Get all compute instances.
+   *
+   * @author Johan Andersson
+   * @returns {Array} the instances.
+   * @memberof Parser
+   */
   getAllInstances () {
     return this.allInstances
   }
 
+  /**
+   * Get all instances of specified name.
+   *
+   * @author Johan Andersson
+   * @param {string} name the name.
+   * @returns {Array} the instances.
+   * @memberof Parser
+   */
   getNamedInstances (name) {
     return _getNamedInstances(this.allInstances, name)
   }
 
+  /**
+   * Get all floating ip associations.
+   *
+   * @author Johan Andersson
+   * @returns {Array} the associations.
+   * @memberof Parser
+   */
   getAllFloatingIpAssociations () {
     return this.AllFloatingIPAssociations
   }
 
+  /**
+   * Get floating ip association by instance name.
+   *
+   * @author Johan Andersson
+   * @param {string} name the instance name.
+   * @returns {Array} the associations.
+   * @memberof Parser
+   */
   getIPByInstanceName (name) {
     return _getNamedIPs(this.AllFloatingIPAssociations, name)
   }
 
+  /**
+   * Get host info with name, user, ip, master status.
+   *
+   * @author Johan Andersson
+   * @param {Array} nodes the node types.
+   * @returns {Array} the resulting node informations.
+   * @memberof Parser
+   */
   getNodeInfo (nodes) {
     const parsedHosts = []
     nodes.forEach(node => {
@@ -89,11 +128,4 @@ function _getFloatingIPAssociations (tfState) {
  */
 function _getNamedIPs (floatingIPAssociations, name) {
   return floatingIPAssociations.filter(instance => instance.name === name)[0].instances
-}
-
-/**
- * @param node
- */
-function _getNodeInfo (node) {
-
 }

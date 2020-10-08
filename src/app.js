@@ -26,7 +26,11 @@ try {
 }
 
 /**
- * @param inputPath
+ * Helper method to get clean path.
+ *
+ * @author Johan Andersson
+ * @param {string} inputPath the path.
+ * @returns {string} clean path.
  */
 function _getPath (inputPath) {
   const splitPath = inputPath.split('/').filter(el => el !== '')
