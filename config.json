@@ -14,7 +14,7 @@
     "configPath": ""
   },
   "ansible": {
-    "hostsPath": ""
+    "hostsPath": "/home/brocahontaz/repos/acme-infrastructure/ansible/hosts"
   },
   "rke": {
     "configPath": "",

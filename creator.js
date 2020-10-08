@@ -5,7 +5,7 @@ export default class Creator {
     this.hosts = hosts
   }
 
-  createClusterYaml () {
+  createRKEClusterYaml () {
 
   }
 
@@ -15,10 +15,24 @@ export default class Creator {
       hostsFile += host.name + '\n'
     })
 
+    hostsFile += `
+[all:vars]
+docker_version="5:19.03.*"
+    `
+
     fs.writeFileSync(hostsPath, hostsFile)
   }
 
-  createSSHConfig () {
+  createSSHConfig (configPath) {
+    let sshConfigFile
+    this.hosts.forEach(host => {
+      sshConfigFile += `Host ${host.name}
+      HostName ${host.ip}
+      User debian
+    
+    `
+    })
 
+    fs.writeFileSync(configPath, sshConfigFile)
   }
 }
