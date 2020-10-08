@@ -9,10 +9,11 @@ const config = require('./config.json')
 
 try {
   const parser = new Parser(_getPath(config.tfstatePath))
-  // console.log(parser.getNodeInfo(config.nodeTypes))
-  const creator = new Creator(parser.getNodeInfo(config.nodeTypes))
-  creator.createAnsibleHosts(_getPath(config.ansible.hostsPath))
-  creator.createSSHConfig(_getPath(config.ssh.configPath), config.ssh.user)
+
+  const creator = new Creator(parser.getNodeInfo(config.nodeTypes), config.ssh, config.ansible, config.rke.config)
+  creator.createAnsibleHosts()
+  creator.createSSHConfig()
+  creator.createRKEClusterYaml()
 } catch (err) {
   console.log(err)
 }

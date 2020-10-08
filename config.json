@@ -3,11 +3,13 @@
   "nodeTypes": [
     {
       "name": "k8s_master",
-      "isMaster": true
+      "isMaster": true,
+      "user": "debian"
     },
     {
       "name": "k8s_node",
-      "isMaster": false
+      "isMaster": false,
+      "user": "debian"
     }
   ],
   "ssh": {

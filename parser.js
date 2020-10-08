@@ -41,6 +41,7 @@ export default class Parser {
         const ip = instanceIPs.filter(ip => ip.attributes.instance_id === instance.attributes.id)[0].attributes.floating_ip
         parsedHosts.push({
           name: instance.attributes.name,
+          user: node.user,
           ip: ip,
           isMaster: node.isMaster,
           internalAddress: instance.attributes.access_ip_v4
