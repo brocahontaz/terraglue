@@ -5,8 +5,7 @@ const config = require('./config.json')
 // import Creator from './creator'
 try {
   const parser = new Parser(config.path)
-  parser.getNodeInfo(config.nodeTypes[0])
-  parser.getNodeInfo(config.nodeTypes[1])
+  console.log(parser.getNodeInfo(config.nodeTypes))
 } catch (err) {
   console.log(err)
 }
