@@ -39,7 +39,7 @@
         "plugin": "canal"
       },
       "authentication": {
-        "strateg": "x509"
+        "strategy": "x509"
       },
       "authorization": {
         "mode": "rbac"
