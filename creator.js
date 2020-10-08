@@ -1,5 +1,7 @@
 import * as fs from 'fs'
-import * as yaml from 'js-yaml'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const yaml = require('js-yaml')
 
 export default class Creator {
   constructor (hosts, ssh, ansible, rke) {
@@ -12,9 +14,10 @@ export default class Creator {
   createRKEClusterYaml () {
     this.hosts.forEach(host => {
       const rkeNode = _createRKENode(host)
-      this.rke.nodes.push(rkeNode)
+      this.rke.config.nodes.push(rkeNode)
     })
-    fs.writeFileSync(this.rke.configPath, yaml.safeDump(this.rke))
+    console.log(this.rke)
+    fs.writeFileSync(this.rke.configPath, yaml.safeDump(this.rke.config))
   }
 
   createAnsibleHosts () {
@@ -53,7 +56,7 @@ User ${host.user}
 function _createRKENode (host) {
   const rkeNode = {
     address: host.ip,
-    internal_address: host.internal_address,
+    internal_address: host.internalAddress,
     role: host.isMaster ? ['controlplane', 'etcd'] : ['worker'],
     labels: host.isMaster ? {
       'node-role.kubernetes.io/master': true

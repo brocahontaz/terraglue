@@ -5,12 +5,19 @@ import Parser from './parser.js'
 import Creator from './creator.js'
 
 const require = createRequire(import.meta.url)
-const config = require('./config.json')
 
 try {
+  let config
+  var args = process.argv.slice(2)
+  if (args[0] && typeof args[0] === 'string' && args[0] !== '') {
+    config = require('/.' + args[0])
+  } else {
+    config = require('./config.json')
+  }
+
   const parser = new Parser(_getPath(config.tfstatePath))
 
-  const creator = new Creator(parser.getNodeInfo(config.nodeTypes), config.ssh, config.ansible, config.rke.config)
+  const creator = new Creator(parser.getNodeInfo(config.nodeTypes), config.ssh, config.ansible, config.rke)
   creator.createAnsibleHosts()
   creator.createSSHConfig()
   creator.createRKEClusterYaml()

@@ -20,7 +20,7 @@
     "hostsPath": "/home/brocahontaz/repos/acme-infrastructure/ansible/hosts"
   },
   "rke": {
-    "configPath": "",
+    "configPath": "/home/brocahontaz/repos/acme-infrastructure/rke/cluster.yaml",
     "config": {
       "nodes": [],
       "services": {

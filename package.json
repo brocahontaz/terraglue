@@ -37,5 +37,8 @@
   "eslintConfig": {
     "extends": "@lnu"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "js-yaml": "^3.14.0"
+  }
 }
