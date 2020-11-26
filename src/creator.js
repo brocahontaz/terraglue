@@ -1,99 +1,105 @@
-import * as fs from 'fs'
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
+const fs = require('fs')
 const yaml = require('js-yaml')
 
-/**
- * Creator module, creates configs and writes to files.
- *
- * @author Johan Andersson
- * @class Creator
- */
-export default class Creator {
-  constructor (hosts, ssh, ansible, rke) {
-    this.hosts = hosts
-    this.ssh = ssh
-    this.ansible = ansible
-    this.rke = rke
-  }
+let bastion
+let hosts
+let rkeTemplate
 
-  /**
-   * Create rke cluster.yaml file.
-   *
-   * @author Johan Andersson
-   * @memberof Creator
-   */
-  createRKEClusterYaml () {
-    this.hosts.forEach(host => {
-      const rkeNode = _createRKENode(host)
-      this.rke.config.nodes.push(rkeNode)
-    })
-    fs.writeFileSync(this.rke.configPath, yaml.safeDump(this.rke.config))
-  }
-
-  /**
-   * Create ansible inventory/hosts file.
-   *
-   * @author Johan Andersson
-   * @memberof Creator
-   */
-  createAnsibleHosts () {
-    let hostsFile = ''
-    this.hosts.forEach(host => {
-      hostsFile += host.name + '\n'
-    })
-
-    hostsFile += `
-[all:vars]
-docker_version="5:19.03.*"
-    `
-
-    fs.writeFileSync(this.ansible.hostsPath, hostsFile)
-  }
-
-  /**
-   * Create SSH config file.
-   *
-   * @author Johan Andersson
-   * @memberof Creator
-   */
-  createSSHConfig () {
-    let sshConfigFile = ''
-    this.hosts.forEach(host => {
-      sshConfigFile += `Host ${host.name}
-HostName ${host.ip}
-User ${host.user}
-
-`
-    })
-
-    fs.writeFileSync(this.ssh.configPath, sshConfigFile)
-  }
+const setInstances = instances => {
+  bastion = instances.bastionHost
+  hosts = instances.parsedHosts
 }
 
-/**
- * Helper function to create rke node.
- *
- * @author Johan Andersson
- * @param {object} host the host.
- * @returns {object} the rke node.
- */
-function _createRKENode (host) {
-  const rkeNode = {
-    address: host.ip,
+const setRKETemplate = template => {
+  rkeTemplate = template
+}
+
+const createRKE = path => {
+  let rkeConfig = rkeTemplate
+  hosts.forEach(host => {
+    if (host.isBastionHost) {
+      rkeConfig.bastion_host = {
+        address: host.ip,
+        user: host.user,
+        port: 22
+      }
+    }
+    if (!host.isMonitor && !host.isBuildServer) {
+      const clusterNode = createClusterNode(host)
+      rkeConfig.nodes.push(clusterNode)
+    }
+  })
+
+  fs.writeFileSync(path, yaml.safeDump(rkeConfig))
+  console.log('At path: ' + path)
+}
+
+const createClusterNode = host => {
+  const clusterNode = {
+    address: host.ip ? host.ip : host.internalAddress,
     internal_address: host.internalAddress,
     role: host.isMaster ? ['controlplane', 'etcd'] : ['worker'],
-    labels: host.isMaster ? {
-      'node-role.kubernetes.io/master': true
-    } : '',
-    taints: host.isMaster ? [{
-      key: 'node-role.kubernetes.io/master',
-      value: true,
-      effect: 'NoSchedule'
-    }] : [],
     hostname_override: host.name,
     user: host.user
   }
 
-  return rkeNode
+  if (host.isMaster) {
+    clusterNode.labels = { 'node-role.kubernetes.io/master': true }
+    clusterNode.taints = [{
+      key: 'node-role.kubernetes.io/master',
+      value: true,
+      effect: 'NoSchedule'
+    }]
+  }
+
+  return clusterNode
+}
+
+const createSSH = path => {
+  let sshConfigFile = ''
+  hosts.forEach(host => {
+    sshConfigFile += `Host ${host.name}\n`
+    if (!host.ip) {
+      sshConfigFile +=
+      `ProxyJump ${bastion.name}\n` +
+      `HostName ${host.internalAddress}\n`
+    } else {
+      sshConfigFile += `HostName ${host.ip}\n`
+    }
+    sshConfigFile += `User ${host.user}\n\n`
+  })
+  fs.writeFileSync(path, sshConfigFile)
+  console.log('At path: ' + path)
+}
+
+const createAnsible = path => {
+  let hostsFile = ''
+  hosts.forEach(host => {
+    hostsFile += host.name + '\n'
+  })
+
+  hostsFile += '\n[MonitoringServer]\n'
+  hosts.filter(host => host.isMonitor).forEach(host => {
+    hostsFile += `${host.name}`
+  })
+
+  hostsFile += '\n[BuildServer]\n'
+  hosts.filter(host => host.isBuildServer).forEach(host => {
+    hostsFile += `${host.name}`
+  })
+
+  hostsFile += `\n
+[all:vars]
+docker_version="5:19.03.*"`
+
+  fs.writeFileSync(path, hostsFile)
+  console.log('At path: ' + path)
+}
+
+module.exports = {
+  setInstances,
+  setRKETemplate,
+  createRKE,
+  createSSH,
+  createAnsible
 }

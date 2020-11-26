@@ -1,150 +1,112 @@
-// import * as path from 'path'
-import * as fs from 'fs'
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
+let configFile
+let tfstateFile
+let parsedtfstate
+let serverTypes
+let floatingIPAssociations
 
-/**
- * Parser module, parses tfstate file.
- *
- * @author Johan Andersson
- * @class Parser
- */
-export default class Parser {
-  constructor (tfstatePath) {
-    _validateArg(tfstatePath)
-    this.tfstatePath = tfstatePath
-    this.tfstateFile = fs.readFileSync(this.tfstatePath).toString()
-    this.tfstate = JSON.parse(this.tfstateFile)
-    this.allInstances = _getInstances(this.tfstate)
-    this.AllFloatingIPAssociations = _getFloatingIPAssociations(this.tfstate)
-  }
+const setFile = file => {
+  configFile = require(process.cwd() + '/' + file)
+  tfstateFile = fs.readFileSync(getPath(configFile.tfstatePath)).toString()
+  parsedtfstate = JSON.parse(tfstateFile)
+  serverTypes = getServerTypes()
+  floatingIPAssociations = getFloatingIPAssociations()
+}
 
-  /**
-   * Get all compute instances.
-   *
-   * @author Johan Andersson
-   * @returns {Array} the instances.
-   * @memberof Parser
-   */
-  getAllInstances () {
-    return this.allInstances
-  }
+const parseServers = () => {
+  return getAllInstances()
+}
 
-  /**
-   * Get all instances of specified name.
-   *
-   * @author Johan Andersson
-   * @param {string} name the name.
-   * @returns {Array} the instances.
-   * @memberof Parser
-   */
-  getNamedInstances (name) {
-    return _getNamedInstances(this.allInstances, name)
-  }
+const parseSSHPath = () => {
+  return getPath(configFile.ssh.configPath)
+}
 
-  /**
-   * Get all floating ip associations.
-   *
-   * @author Johan Andersson
-   * @returns {Array} the associations.
-   * @memberof Parser
-   */
-  getAllFloatingIpAssociations () {
-    return this.AllFloatingIPAssociations
-  }
+const parseRKEPath = () => {
+  return getPath(configFile.rke.configPath)
+}
 
-  /**
-   * Get floating ip association by instance name.
-   *
-   * @author Johan Andersson
-   * @param {string} name the instance name.
-   * @returns {Array} the associations.
-   * @memberof Parser
-   */
-  getIPByInstanceName (name) {
-    return _getNamedIPs(this.AllFloatingIPAssociations, name)
-  }
+const parseAnsiblePath = () => {
+  return getPath(configFile.ansible.hostsPath)
+}
 
-  /**
-   * Get host info with name, user, ip, master status.
-   *
-   * @author Johan Andersson
-   * @param {Array} nodes the node types.
-   * @returns {Array} the resulting node informations.
-   * @memberof Parser
-   */
-  getNodeInfo (nodes) {
-    const parsedHosts = []
-    nodes.forEach(node => {
-      const instances = this.getNamedInstances(node.name)
-      const instanceIPs = this.getIPByInstanceName(node.name)
-      instances.forEach(instance => {
-        const ip = instanceIPs.filter(ip => ip.attributes.instance_id === instance.attributes.id)[0].attributes.floating_ip
-        parsedHosts.push({
-          name: instance.attributes.name,
-          user: node.user,
-          ip: ip,
-          isMaster: node.isMaster,
-          internalAddress: instance.attributes.access_ip_v4
-        })
-      })
+const parseRKETemplate = () => {
+  return configFile.rke.config
+}
+
+const getServerTypes = () => {
+  return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
+}
+
+const getAdditionalServerTypeInfo = serverType => {
+  return configFile.serverTypes[serverType]
+}
+
+const getFloatingIPAssociations = () => {
+  return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_floatingip_associate_v2')
+}
+
+const getAllInstances = () => {
+  const parsedHosts = []
+  let bastionHost = {}
+  serverTypes.forEach(serverType => {
+    const instances = getInstancesByType(serverType.name)
+    const instanceIPs = getInstanceIPsByType(serverType.name)
+    const additionalConfigInfo = getAdditionalServerTypeInfo(serverType.name)
+
+    instances.forEach(instance => {
+      const ip = getIPByAssociation(instanceIPs, instance.attributes.id)
+      const host = {
+        name: instance.attributes.name,
+        user: additionalConfigInfo.user,
+        ip: ip,
+        isMaster: additionalConfigInfo.isMaster,
+        isMonitor: additionalConfigInfo.isMonitor,
+        isBastionHost: additionalConfigInfo.isBastionHost,
+        isBuildServer: additionalConfigInfo.isBuildServer,
+        internalAddress: instance.attributes.access_ip_v4
+      }
+      parsedHosts.push(host)
+      if (additionalConfigInfo.isBastionHost) {
+        bastionHost = host
+      }
     })
-    return parsedHosts
+  })
+  return {bastionHost, parsedHosts}
+}
+
+const getInstancesByType = type => {
+  return serverTypes.filter(instance => instance.name === type)[0].instances
+}
+
+const getInstanceIPsByType = type => {
+  const filteredInstances = floatingIPAssociations.filter(instance => instance.name === type)[0]
+  return filteredInstances?.instances || []
+}
+
+const getIPByAssociation = (instanceIPs, id) => {
+  const ip = instanceIPs.filter(ip => ip.attributes.instance_id === id)[0]
+  return ip?.attributes.floating_ip || undefined
+}
+
+const getPath = tildyPath => {
+  const splitPath = tildyPath.split(path.sep)
+  untildify(splitPath)
+  return path.join.apply(null, splitPath)
+}
+
+const untildify = splitPath => {
+  if (splitPath[0] === '~') {
+    splitPath[0] = os.homedir()
   }
 }
 
-/**
- * Just validating input arg.
- *
- * @author Johan Andersson
- * @param {string} arg the arg.
- */
-function _validateArg (arg) {
-  if (!arg || typeof arg !== 'string' || arg === '') {
-    throw new Error('Input argument must be a valid path written as a String!')
-  }
-}
-
-/**
- * Helper method to get all instances.
- *
- * @author Johan Andersson
- * @param {object} tfstate the tfstate file.
- * @returns {Array} the instances.
- */
-function _getInstances (tfstate) {
-  return tfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
-}
-
-/**
- * Helper method to get instances by name.
- *
- * @author Johan Andersson
- * @param {Array} instances the instances to filter from.
- * @param {string} name the name.
- * @returns {Array} the named instances.
- */
-function _getNamedInstances (instances, name) {
-  return instances.filter(instance => instance.name === name)[0].instances
-}
-
-/**
- * Helper method to get floating ip assocations.
- *
- * @author Johan Andersson
- * @param {object} tfstate the tfstate file.
- * @returns {Array} the associations.
- */
-function _getFloatingIPAssociations (tfstate) {
-  return tfstate.resources.filter(element => element.type === 'openstack_compute_floatingip_associate_v2')
-}
-
-/**
- * Helper method to get the floating ip association by instance name.
- *
- * @author Johan Andersson
- * @param {Array} floatingIPAssociations the associations.
- * @param {string} name the instance name.
- * @returns {Array} the named associations.
- */
-function _getNamedIPs (floatingIPAssociations, name) {
-  return floatingIPAssociations.filter(instance => instance.name === name)[0].instances
+module.exports = {
+  setFile,
+  parseSSHPath,
+  parseRKEPath,
+  parseAnsiblePath,
+  parseRKETemplate,
+  parseServers
 }

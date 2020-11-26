@@ -136,5 +136,29 @@ dist
 !.vscode/extensions.json
 *.code-workspace
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,vscode,node
+### yarn ###
+# https://yarnpkg.com/advanced/qa#which-files-should-be-gitignored
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# if you are NOT using Zero-installs, then:
+# comment the following lines
+!.yarn/cache
+
+# and uncomment the following lines
+# .pnp.*
+
+# Configs
+configs/
+package-lock.json
+terraglue-linux
+terraglue-macos
+terraglue-win
+terraglue
+
+# End of https://www.toptal.com/developers/gitignore/api/yarn
 n

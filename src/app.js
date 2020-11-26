@@ -1,65 +1,58 @@
-import { createRequire } from 'module'
-import * as path from 'path'
-
-import Parser from './parser.js'
-import Creator from './creator.js'
-
-const require = createRequire(import.meta.url)
+const path = require('path')
+const yargs = require('yargs')
 const os = require('os')
+const colors = require('colors')
 
-try {
-  let config
-  var args = process.argv.slice(2)
-  if (args[0] && typeof args[0] === 'string' && args[0] !== '') {
-    config = require('./configs/' + args[0])
-  } else {
-    config = require('./configs/default.json')
-  }
+const Parser = require('./parser')
+const Creator = require('./creator')
 
-  _setPaths(config)
+const argv = yargs
+  .command('$0 <file>', 'The config file', {
+    file: {
+      description: 'The config file to read values from.',
+      type: 'json'
+    }
+  })
+  .option('rke', {
+    alias: 'r',
+    description: 'Create config file for rke',
+    type: 'boolean' 
+  })
+  .option('ansible', {
+    alias: 'a',
+    description: 'Create config files for Ansible',
+    type: 'boolean'
+  })
+  .option('ssh', {
+    alias: 's',
+    description: 'Create SSH host file',
+    type: 'boolean'
+  })
+  .help()
+  .alias('help', 'h')
+  .argv
 
-  const parser = new Parser(config.tfstatePath)
+Parser.setFile(argv.file)
 
-  const creator = new Creator(parser.getNodeInfo(config.nodeTypes), config.ssh, config.ansible, config.rke)
-  creator.createAnsibleHosts()
-  creator.createSSHConfig()
-  creator.createRKEClusterYaml()
-} catch (err) {
-  console.log(err)
+const servers = Parser.parseServers()
+
+Creator.setInstances(servers)
+
+if (argv.ssh) {
+  console.log('~~~Creating SSH config file~~~'.bold)
+  Creator.createSSH(Parser.parseSSHPath())
+  console.log('>SSH config file created!<\n'.bold)
 }
 
-/**
- * Set paths correctly.
- *
- * @param {object} config the config.
- */
-function _setPaths (config) {
-  config.tfstatePath = _getPath(config.tfstatePath)
-  config.ssh.configPath = _getPath(config.ssh.configPath)
-  config.ansible.hostsPath = _getPath(config.ansible.hostsPath)
-  config.rke.configPath = _getPath(config.rke.configPath)
+if (argv.ansible) {
+  console.log('~~~Creating Ansible hosts file~~~'.bold)
+  Creator.createAnsible(Parser.parseAnsiblePath())
+  console.log('>Ansible hosts file created!<\n'.bold)
 }
 
-/**
- * Helper method to get clean path.
- *
- * @author Johan Andersson
- * @param {string} inputPath the path.
- * @returns {string} clean path.
- */
-function _getPath (inputPath) {
-  const splitPath = inputPath.split(path.sep)
-  _untildifyPath(splitPath)
-  return path.join.apply(null, splitPath)
-}
-
-/**
- * Untildifies a split path.
- *
- * @param {Array} splitPath the path to untildify.
- */
-function _untildifyPath (splitPath) {
-  if (splitPath[0] === '~') {
-    splitPath[0] = os.homedir()
-  }
+if (argv.rke) {
+  console.log('~~~Creating RKE cluster file~~~'.bold)
+  Creator.setRKETemplate(Parser.parseRKETemplate())
+  Creator.createRKE(Parser.parseRKEPath())
+  console.log('>RKE cluster file created!<\n'.bold)
 }
