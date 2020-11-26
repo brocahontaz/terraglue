@@ -8,7 +8,7 @@ let serverTypes
 let floatingIPAssociations
 
 const setFile = file => {
-  configFile = JSON.parse(fs.readFileSync(path.join(__dirname, file)))
+  configFile = require(process.cwd() + '/' + file)
   tfstateFile = fs.readFileSync(getPath(configFile.tfstatePath)).toString()
   parsedtfstate = JSON.parse(tfstateFile)
   serverTypes = getServerTypes()
