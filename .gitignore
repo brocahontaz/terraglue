@@ -152,5 +152,8 @@ dist
 # and uncomment the following lines
 # .pnp.*
 
+# Configs
+/configs
+
 # End of https://www.toptal.com/developers/gitignore/api/yarn
 n

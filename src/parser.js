@@ -64,6 +64,7 @@ const getAllInstances = () => {
         isMaster: additionalConfigInfo.isMaster,
         isMonitor: additionalConfigInfo.isMonitor,
         isBastionHost: additionalConfigInfo.isBastionHost,
+        isBuildServer: additionalConfigInfo.isBuildServer,
         internalAddress: instance.attributes.access_ip_v4
       }
       parsedHosts.push(host)

@@ -31,6 +31,7 @@ const createRKE = path => {
   })
 
   fs.writeFileSync(path, yaml.safeDump(rkeConfig))
+  console.log('At path: ' + path)
 }
 
 const createClusterNode = host => {
@@ -68,6 +69,7 @@ const createSSH = path => {
     sshConfigFile += `User ${host.user}\n\n`
   })
   fs.writeFileSync(path, sshConfigFile)
+  console.log('At path: ' + path)
 }
 
 const createAnsible = path => {
@@ -91,6 +93,7 @@ const createAnsible = path => {
 docker_version="5:19.03.*"`
 
   fs.writeFileSync(path, hostsFile)
+  console.log('At path: ' + path)
 }
 
 module.exports = {

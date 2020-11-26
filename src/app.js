@@ -41,18 +41,18 @@ Creator.setInstances(servers)
 if (argv.ssh) {
   console.log('~~~Creating SSH config file~~~'.bold)
   Creator.createSSH(Parser.parseSSHPath())
-  console.log('\t>SSH config file created!<'.bold)
+  console.log('>SSH config file created!<\n'.bold)
 }
 
 if (argv.ansible) {
   console.log('~~~Creating Ansible hosts file~~~'.bold)
   Creator.createAnsible(Parser.parseAnsiblePath())
-  console.log('\t>Ansible hosts file created!<'.bold)
+  console.log('>Ansible hosts file created!<\n'.bold)
 }
 
 if (argv.rke) {
   console.log('~~~Creating RKE cluster file~~~'.bold)
   Creator.setRKETemplate(Parser.parseRKETemplate())
   Creator.createRKE(Parser.parseRKEPath())
-  console.log('\t>RKE cluster file created!<'.bold)
+  console.log('>RKE cluster file created!<\n'.bold)
 }

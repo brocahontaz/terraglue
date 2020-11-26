@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Smart little app constructing config files for tools like Ansible, rke, etc from Terraform provisioned resources.",
   "main": "src/app.js",
+  "bin": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "lint": "npx eslint . || exit 0",

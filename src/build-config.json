@@ -9,10 +9,10 @@
       "user": "debian"
     }},
   "ssh": {
-    "configPath": "~/repos/dev-ops/configs/build_ssh_config_kna",
+    "configPath": "~/randomFiles/build_ssh_config_kna",
     "user": "debian"
   },
   "ansible": {
-    "hostsPath": "~/repos/dev-ops/ansible/hosts.build-kna"
+    "hostsPath": "~/randomFiles/hosts.build-kna"
   }
 }
