@@ -37,8 +37,8 @@
   "eslintConfig": {
     "extends": "@lnu"
   },
-  "type": "module",
   "dependencies": {
-    "js-yaml": "^3.14.0"
+    "js-yaml": "^3.14.0",
+    "yargs": "^16.1.1"
   }
 }
