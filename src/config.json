@@ -30,6 +30,7 @@
   "rke": {
     "configPath": "~/randomFiles/cluster.yaml",
     "config": {
+      "bastion_host": {},
       "nodes": [],
       "services": {
         "etcd": {

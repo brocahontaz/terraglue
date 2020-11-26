@@ -38,8 +38,10 @@ const servers = Parser.parseServers()
 
 Creator.setInstances(servers)
 
-if (argv.rke) {
-  console.log('RKE!')
+if (argv.ssh) {
+  console.log('~~~Creating SSH config file~~~'.bold)
+  Creator.createSSH(Parser.parseSSHPath())
+  console.log('\t>SSH config file created!<'.bold)
 }
 
 if (argv.ansible) {
@@ -48,10 +50,9 @@ if (argv.ansible) {
   console.log('\t>Ansible hosts file created!<'.bold)
 }
 
-if (argv.ssh) {
-  console.log('~~~Creating SSH config file~~~'.bold)
-  Creator.createSSH(Parser.parseSSHPath())
-  console.log('\t>SSH config file created!<'.bold)
+if (argv.rke) {
+  console.log('~~~Creating RKE cluster file~~~'.bold)
+  Creator.setRKETemplate(Parser.parseRKETemplate())
+  Creator.createRKE(Parser.parseRKEPath())
+  console.log('\t>RKE cluster file created!<'.bold)
 }
-
-//console.log(argv.file)

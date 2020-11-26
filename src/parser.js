@@ -31,6 +31,10 @@ const parseAnsiblePath = () => {
   return getPath(configFile.ansible.hostsPath)
 }
 
+const parseRKETemplate = () => {
+  return configFile.rke.config
+}
+
 const getServerTypes = () => {
   return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
 }
@@ -102,5 +106,6 @@ module.exports = {
   parseSSHPath,
   parseRKEPath,
   parseAnsiblePath,
+  parseRKETemplate,
   parseServers
 }
