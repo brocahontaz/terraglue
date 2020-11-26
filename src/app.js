@@ -6,6 +6,12 @@ const Parser = require('./parser')
 const Creator = require('./creator')
 
 const argv = yargs
+  .command('$0 <file>', 'The config file', {
+    file: {
+      description: 'The config file to read values from.',
+      type: 'json'
+    }
+  })
   .option('rke', {
     alias: 'r',
     description: 'Create config file for rke',
@@ -36,3 +42,5 @@ if (argv.ansible) {
 if (argv.ssh) {
   console.log('SSH!')
 }
+
+console.log(argv.file)
