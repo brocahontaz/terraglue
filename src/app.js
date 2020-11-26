@@ -31,6 +31,10 @@ const argv = yargs
   .alias('help', 'h')
   .argv
 
+Parser.setFile(argv.file)
+
+const servers = Parser.parseServers()
+
 if (argv.rke) {
   console.log('RKE!')
 }
@@ -43,4 +47,4 @@ if (argv.ssh) {
   console.log('SSH!')
 }
 
-console.log(argv.file)
+//console.log(argv.file)
