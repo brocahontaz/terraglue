@@ -157,7 +157,7 @@ configs/
 package-lock.json
 terraglue-linux
 terraglue-macos
-terraglue-windows
+terraglue-win
 terraglue
 
 # End of https://www.toptal.com/developers/gitignore/api/yarn
