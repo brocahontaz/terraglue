@@ -19,6 +19,18 @@ const parseServers = () => {
   return getAllInstances()
 }
 
+const parseSSHPath = () => {
+  return getPath(configFile.ssh.configPath)
+}
+
+const parseRKEPath = () => {
+  return getPath(configFile.rke.configPath)
+}
+
+const parseAnsiblePath = () => {
+  return getPath(configFile.ansible.hostsPath)
+}
+
 const getServerTypes = () => {
   return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
 }
@@ -87,5 +99,8 @@ const untildify = splitPath => {
 
 module.exports = {
   setFile,
+  parseSSHPath,
+  parseRKEPath,
+  parseAnsiblePath,
   parseServers
 }

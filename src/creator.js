@@ -4,7 +4,7 @@ const yaml = require('js-yaml')
 let bastion
 let hosts
 
-setInstances = instances => {
+const setInstances = instances => {
   bastion = instances.bastionHost
   hosts = instances.parsedHosts
 }
@@ -13,7 +13,7 @@ const createRKE = () => {
 
 }
 
-const createSSH = () => {
+const createSSH = path => {
   let sshConfigFile = ''
   hosts.forEach(host => {
     sshConfigFile += `Host ${host.name}\n`
@@ -26,9 +26,7 @@ const createSSH = () => {
     }
     sshConfigFile += `User ${host.user}\n\n`
   })
-  console.log(sshConfigFile)
-
-  fs.writeFileSync()
+  fs.writeFileSync(path, sshConfigFile)
 }
 
 const createAnsible = () => {

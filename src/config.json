@@ -21,7 +21,7 @@
     }
   },
   "ssh": {
-    "configPath": "~/repos/acme-infrastructure/configs/ssh_config",
+    "configPath": "~/randomFiles/ssh_config",
     "user": "debian"
   },
   "ansible": {

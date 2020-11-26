@@ -48,7 +48,8 @@ if (argv.ansible) {
 
 if (argv.ssh) {
   console.log('~~~Creating SSH config file~~~'.bold)
-  Creator.createSSH()
+  Creator.createSSH(Parser.parseSSHPath())
+  console.log('\t>SSH config file created!<'.bold)
 }
 
 //console.log(argv.file)
