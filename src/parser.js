@@ -44,8 +44,21 @@ const getAllInstances = () => {
   let bastionHost = {}
   serverTypes.forEach(serverType => {
     const instances = getInstancesByType(serverType.name)
-    let instanceIPs = getInstanceIPsByType(serverType.name)
-    console.log(instanceIPs)
+    const instanceIPs = getInstanceIPsByType(serverType.name)
+    
+    instances.forEach(instance => {
+      const ip = getIPByAssociation(instanceIPs, instance.attributes.id)
+      const host = {
+        name: instance.attributes.name,
+        user: serverType.user,
+        ip: ip,
+        isMaster: serverType.isMaster,
+        isMonitor: serverType.isMonitor,
+        isBastionHost: serverType.isBastionHost,
+        internalAddress: instance.attributes.access_ip_v4
+      }
+      console.log(host)
+    })
   })
 }
 
@@ -54,10 +67,13 @@ const getInstancesByType = type => {
 }
 
 const getInstanceIPsByType = type => {
-
   const filteredInstances = floatingIPAssociations.filter(instance => instance.name === type)[0]
-
   return filteredInstances?.instances || []
+}
+
+const getIPByAssociation = (instanceIPs, id) => {
+  const ip = instanceIPs.filter(ip => ip.attributes.instance_id === id)[0]
+  return ip?.attributes.floating_ip || undefined
 }
 
 const getPath = tildyPath => {
