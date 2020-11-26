@@ -1,17 +1,25 @@
 {
   "tfstatePath": "~/repos/dev-ops/terraform/kna/terraform.tfstate",
-  "servers": [
-    {
-      "name": "k8s_master",
+  "serverTypes": {
+    "k8s_master_kna": {
       "isMaster": true,
+      "isBastionHost": true,
+      "isMonitor": false,
       "user": "debian"
     },
-    {
-      "name": "k8s_node",
+    "k8s_node_kna": {
       "isMaster": false,
+      "isBastionHost": false,
+      "isMonitor": false,
+      "user": "debian"
+    },
+    "k8s_monitoring_kna": {
+      "isMaster": false,
+      "isBastionHost": false,
+      "isMonitor": true,
       "user": "debian"
     }
-  ],
+  },
   "ssh": {
     "configPath": "~/repos/acme-infrastructure/configs/ssh_config",
     "user": "debian"

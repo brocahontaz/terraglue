@@ -35,26 +35,32 @@ const getServerTypes = () => {
   return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
 }
 
+const getAdditionalServerTypeInfo = serverType => {
+  return configFile.serverTypes[serverType]
+}
+
 const getFloatingIPAssociations = () => {
   return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_floatingip_associate_v2')
 }
 
 const getAllInstances = () => {
+
   const parsedHosts = []
   let bastionHost = {}
   serverTypes.forEach(serverType => {
     const instances = getInstancesByType(serverType.name)
     const instanceIPs = getInstanceIPsByType(serverType.name)
-    
+    const additionalConfigInfo = getAdditionalServerTypeInfo(serverType.name)
+
     instances.forEach(instance => {
       const ip = getIPByAssociation(instanceIPs, instance.attributes.id)
       const host = {
         name: instance.attributes.name,
-        user: serverType.user,
+        user: additionalConfigInfo.user,
         ip: ip,
-        isMaster: serverType.isMaster,
-        isMonitor: serverType.isMonitor,
-        isBastionHost: serverType.isBastionHost,
+        isMaster: additionalConfigInfo.isMaster,
+        isMonitor: additionalConfigInfo.isMonitor,
+        isBastionHost: additionalConfigInfo.isBastionHost,
         internalAddress: instance.attributes.access_ip_v4
       }
       console.log(host)
