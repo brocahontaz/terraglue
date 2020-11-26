@@ -91,7 +91,6 @@ const getIPByAssociation = (instanceIPs, id) => {
 }
 
 const getPath = tildyPath => {
-  console.log(tildyPath)
   const splitPath = tildyPath.split(path.sep)
   untildify(splitPath)
   return path.join.apply(null, splitPath)
