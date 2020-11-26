@@ -1,6 +1,7 @@
 const path = require('path')
 const yargs = require('yargs')
 const os = require('os')
+const colors = require('colors')
 
 const Parser = require('./parser')
 const Creator = require('./creator')
@@ -46,7 +47,8 @@ if (argv.ansible) {
 }
 
 if (argv.ssh) {
-  console.log('SSH!')
+  console.log('~~~Creating SSH config file~~~'.bold)
+  Creator.createSSH()
 }
 
 //console.log(argv.file)

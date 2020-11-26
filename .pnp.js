@@ -38,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@lnu/eslint-config", "virtual:c836c836cb41856d6ef7225139c6d6910a3f3dd278777febfd829e534975d5a4930494d232b9d2bf0f8ba0882d3d882f72675dc3e246168c7ed1969ab5b63f1e#npm:1.1.2"],
+            ["colors", "npm:1.4.0"],
             ["eslint", "npm:7.14.0"],
             ["eslint-plugin-import", "virtual:c836c836cb41856d6ef7225139c6d6910a3f3dd278777febfd829e534975d5a4930494d232b9d2bf0f8ba0882d3d882f72675dc3e246168c7ed1969ab5b63f1e#npm:2.22.1"],
             ["eslint-plugin-jsdoc", "virtual:c836c836cb41856d6ef7225139c6d6910a3f3dd278777febfd829e534975d5a4930494d232b9d2bf0f8ba0882d3d882f72675dc3e246168c7ed1969ab5b63f1e#npm:30.7.8"],
@@ -373,6 +374,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/color-name-npm-1.1.4-025792b0ea-3e1c9a4dee.zip/node_modules/color-name/",
           "packageDependencies": [
             ["color-name", "npm:1.1.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["colors", [
+        ["npm:1.4.0", {
+          "packageLocation": "./.yarn/cache/colors-npm-1.4.0-7e2cf12234-a0f266ac04.zip/node_modules/colors/",
+          "packageDependencies": [
+            ["colors", "npm:1.4.0"]
           ],
           "linkType": "HARD",
         }]
@@ -1961,6 +1971,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["terraglue", "workspace:."],
             ["@lnu/eslint-config", "virtual:c836c836cb41856d6ef7225139c6d6910a3f3dd278777febfd829e534975d5a4930494d232b9d2bf0f8ba0882d3d882f72675dc3e246168c7ed1969ab5b63f1e#npm:1.1.2"],
+            ["colors", "npm:1.4.0"],
             ["eslint", "npm:7.14.0"],
             ["eslint-plugin-import", "virtual:c836c836cb41856d6ef7225139c6d6910a3f3dd278777febfd829e534975d5a4930494d232b9d2bf0f8ba0882d3d882f72675dc3e246168c7ed1969ab5b63f1e#npm:2.22.1"],
             ["eslint-plugin-jsdoc", "virtual:c836c836cb41856d6ef7225139c6d6910a3f3dd278777febfd829e534975d5a4930494d232b9d2bf0f8ba0882d3d882f72675dc3e246168c7ed1969ab5b63f1e#npm:30.7.8"],
