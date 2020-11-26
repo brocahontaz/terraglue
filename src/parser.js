@@ -14,7 +14,7 @@ const setFile = file => {
 }
 
 const parseServers = () => {
-  getInstances()
+  getAllInstances()
 }
 
 const parseRKE = () => {
@@ -33,12 +33,17 @@ const getServerTypes = () => {
   return parsedtfstate.resources.filter(element => element.type === 'openstack_compute_instance_v2')
 }
 
-const getInstances = () => {
+const getAllInstances = () => {
   const parsedHosts = []
   let bastionHost = {}
   serverTypes.forEach(serverType => {
-    console.log(serverType)
+    const instances = getInstancesByType(serverType.name)
+    let instanceIPs = []
   })
+}
+
+const getInstancesByType = type => {
+  return serverTypes.filter(instance => instance.name === type)[0].instances
 }
 
 const getPath = tildyPath => {
