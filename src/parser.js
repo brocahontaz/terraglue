@@ -50,7 +50,6 @@ const getAllInstances = () => {
         isBastionHost: additionalConfigInfo.isBastionHost,
         internalAddress: instance.attributes.access_ip_v4
       }
-      console.log(host)
       parsedHosts.push(host)
       if (additionalConfigInfo.isBastionHost) {
         bastionHost = host

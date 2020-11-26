@@ -35,7 +35,7 @@ Parser.setFile(argv.file)
 
 const servers = Parser.parseServers()
 
-console.log(servers)
+Creator.setInstances(servers)
 
 if (argv.rke) {
   console.log('RKE!')
