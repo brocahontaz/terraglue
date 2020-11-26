@@ -16,19 +16,7 @@ const setFile = file => {
 }
 
 const parseServers = () => {
-  getAllInstances()
-}
-
-const parseRKE = () => {
-
-}
-
-const parseSSH = () => {
-
-}
-
-const parseAnsible = () => {
-
+  return getAllInstances()
 }
 
 const getServerTypes = () => {
@@ -44,7 +32,6 @@ const getFloatingIPAssociations = () => {
 }
 
 const getAllInstances = () => {
-
   const parsedHosts = []
   let bastionHost = {}
   serverTypes.forEach(serverType => {
@@ -64,8 +51,13 @@ const getAllInstances = () => {
         internalAddress: instance.attributes.access_ip_v4
       }
       console.log(host)
+      parsedHosts.push(host)
+      if (additionalConfigInfo.isBastionHost) {
+        bastionHost = host
+      }
     })
   })
+  return {bastionHost, parsedHosts}
 }
 
 const getInstancesByType = type => {
@@ -96,8 +88,5 @@ const untildify = splitPath => {
 
 module.exports = {
   setFile,
-  parseServers,
-  parseRKE,
-  parseSSH,
-  parseAnsible
+  parseServers
 }

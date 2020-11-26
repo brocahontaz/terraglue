@@ -1,0 +1,17 @@
+{
+  "tfstatePath": "~/repos/dev-ops/terraform/build-server-kna/terraform.tfstate",
+  "serverTypes": {
+    "build_master": {
+      "isMaster": true,
+      "isBastionHost": true,
+      "isMonitor": false,
+      "user": "debian"
+    }},
+  "ssh": {
+    "configPath": "~/repos/dev-ops/configs/build_ssh_config_kna",
+    "user": "debian"
+  },
+  "ansible": {
+    "hostsPath": "~/repos/dev-ops/ansible/hosts.build-kna"
+  }
+}
