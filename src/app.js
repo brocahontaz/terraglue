@@ -43,7 +43,9 @@ if (argv.rke) {
 }
 
 if (argv.ansible) {
-  console.log('Ansible!')
+  console.log('~~~Creating Ansible hosts file~~~'.bold)
+  Creator.createAnsible(Parser.parseAnsiblePath())
+  console.log('\t>Ansible hosts file created!<'.bold)
 }
 
 if (argv.ssh) {

@@ -5,6 +5,7 @@
       "isMaster": true,
       "isBastionHost": true,
       "isMonitor": false,
+      "isBuildServer": true,
       "user": "debian"
     }},
   "ssh": {

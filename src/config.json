@@ -25,10 +25,10 @@
     "user": "debian"
   },
   "ansible": {
-    "hostsPath": "~/repos/acme-infrastructure/ansible/hosts"
+    "hostsPath": "~/randomFiles/hosts"
   },
   "rke": {
-    "configPath": "~/repos/acme-infrastructure/rke/cluster.yaml",
+    "configPath": "~/randomFiles/cluster.yaml",
     "config": {
       "nodes": [],
       "services": {

@@ -29,8 +29,27 @@ const createSSH = path => {
   fs.writeFileSync(path, sshConfigFile)
 }
 
-const createAnsible = () => {
+const createAnsible = path => {
+  let hostsFile = ''
+  hosts.forEach(host => {
+    hostsFile += host.name + '\n'
+  })
 
+  hostsFile += '\n[MonitoringServer]\n'
+  hosts.filter(host => host.isMonitor).forEach(host => {
+    hostsFile += `${host.name}`
+  })
+
+  hostsFile += '\n[BuildServer]\n'
+  hosts.filter(host => host.isBuildServer).forEach(host => {
+    hostsFile += `${host.name}`
+  })
+
+  hostsFile += `\n
+[all:vars]
+docker_version="5:19.03.*"`
+
+  fs.writeFileSync(path, hostsFile)
 }
 
 module.exports = {
