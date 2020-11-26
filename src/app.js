@@ -22,9 +22,17 @@ const argv = yargs
     type: 'boolean'
   })
   .help()
-  .alias('help', h)
+  .alias('help', 'h')
   .argv
 
 if (argv.rke) {
   console.log('RKE!')
+}
+
+if (argv.ansible) {
+  console.log('Ansible!')
+}
+
+if (argv.ssh) {
+  console.log('SSH!')
 }

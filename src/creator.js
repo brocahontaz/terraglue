@@ -1,6 +1,4 @@
-import * as fs from 'fs'
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
+const fs = require('fs')
 const yaml = require('js-yaml')
 
 /**
@@ -9,7 +7,7 @@ const yaml = require('js-yaml')
  * @author Johan Andersson
  * @class Creator
  */
-export default class Creator {
+const Creator = class Creator {
   constructor (hosts, ssh, ansible, rke) {
     this.hosts = hosts
     this.ssh = ssh
@@ -97,3 +95,5 @@ function _createRKENode (host) {
 
   return rkeNode
 }
+
+module.exports = Creator

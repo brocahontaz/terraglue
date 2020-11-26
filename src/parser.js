@@ -1,5 +1,5 @@
 // import * as path from 'path'
-import * as fs from 'fs'
+const fs = require('fs')
 
 /**
  * Parser module, parses tfstate file.
@@ -7,7 +7,7 @@ import * as fs from 'fs'
  * @author Johan Andersson
  * @class Parser
  */
-export default class Parser {
+const Parser = class Parser {
   constructor (tfstatePath) {
     _validateArg(tfstatePath)
     this.tfstatePath = tfstatePath
@@ -148,3 +148,5 @@ function _getFloatingIPAssociations (tfstate) {
 function _getNamedIPs (floatingIPAssociations, name) {
   return floatingIPAssociations.filter(instance => instance.name === name)[0].instances
 }
+
+module.exports = Parser
