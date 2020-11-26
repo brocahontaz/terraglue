@@ -1,6 +1,6 @@
 {
   "tfstatePath": "~/repos/acme-infrastructure/terraform/terraform.tfstate",
-  "nodeTypes": [
+  "servers": [
     {
       "name": "k8s_master",
       "isMaster": true,
