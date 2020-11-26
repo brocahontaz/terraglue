@@ -8,7 +8,7 @@ let serverTypes
 let floatingIPAssociations
 
 const setFile = file => {
-  configFile = require('./' + file)
+  configFile = JSON.parse(fs.readFileSync(path.join(__dirname, file)))
   tfstateFile = fs.readFileSync(getPath(configFile.tfstatePath)).toString()
   parsedtfstate = JSON.parse(tfstateFile)
   serverTypes = getServerTypes()
@@ -91,6 +91,7 @@ const getIPByAssociation = (instanceIPs, id) => {
 }
 
 const getPath = tildyPath => {
+  console.log(tildyPath)
   const splitPath = tildyPath.split(path.sep)
   untildify(splitPath)
   return path.join.apply(null, splitPath)
