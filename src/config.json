@@ -1,5 +1,5 @@
 {
-  "tfstatePath": "~/repos/acme-infrastructure/terraform/terraform.tfstate",
+  "tfstatePath": "~/repos/dev-ops/terraform/kna/terraform.tfstate",
   "servers": [
     {
       "name": "k8s_master",
